@@ -3,8 +3,8 @@ import numpy as np
 import tensorflow as tf
 
 # Verwendung von NumPy, um ein 2D-Array rechteckiger Ausschnitt von [-2,2] bis [-2,2] zu erstellen,
-# welcher mit 800/800 Pixel abgetstet wird.
-y, x = np.mgrid[-2:2:0.5, -2:2:0.5]
+# welcher mit 800/800 Pixel abgesttet wird.
+y, x = np.mgrid[-2:2:0.005, -2:2:0.005]
 
 #Definieren der Koodinaten für jedes pixel
 zArray = x+1j*y
@@ -18,7 +18,7 @@ lastMask = tf.Variable(tf.zeros_like(tf.cast(C, "bool")))
 
 def mandelbrotmenge():
 
-      #Maske aus Boolean Werte der Divergierte und Convergierten Pixels berechnen
+      #Maske aus Booleschen Werte der Divergierte und Convergierten Pixels berechnen
       ind = tf.abs(Z) < 2
 
       #Convergierte Maske
@@ -42,11 +42,11 @@ def mandelbrotmenge():
       #Zahl der Iteration reinschreiben
       color.assign(tf.where(newDivergent, i, color))
 
-      #Maske aus Boolean Werte der Divergierte und Convergierten Pixels speichern
+      #Maske aus Booleschen Werte der Divergierte und Convergierten Pixels speichern
       lastMask.assign(ind)
 
 
-for n in range(10):
+for n in range(100):
     mandelbrotmenge()
     i.assign(i + 1)
 
