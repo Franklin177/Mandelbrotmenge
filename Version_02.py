@@ -3,14 +3,16 @@ import numpy as np
 import tensorflow as tf
 
 # Verwendung von NumPy, um ein 2D-Array rechteckiger Ausschnitt von [-2,2] bis [-2,2] zu erstellen,
-# welcher mit 800/800 Pixel abgesttet wird.
+# welcher mit 800/800 Pixel gefüllt wird.
 y, x = np.mgrid[-2:2:0.005, -2:2:0.005]
+
 #Definieren der Koodinaten für jedes pixel
 zArray = x+1j*y
 
 #Erstellung von Tensoren.
 C = tf.constant(zArray)
 Z = tf.Variable(tf.zeros_like(C))
+
 color = tf.Variable(tf.zeros_like(C, "int32"))
 lastMask = tf.Variable(tf.zeros_like(tf.cast(C, "bool")))
 
@@ -28,7 +30,7 @@ def mandelbrotmenge():
       #Selectieren der zugehörigen 'c' Pixels der Iteration
       cConvergent = tf.gather_nd(C, maskConvergent)
 
-      #Berechnung der Mandelbrot-Menge
+      #Berechnung der Mandelbrot-Menge: (Z_(n+1)=Z_n^2+C ).
       Zn = zConvergent**2 + cConvergent
 
       #Kopieren der neuen Maske 'Zn' in 'Z' und Aktualisierung der Tensor 'Z'
@@ -37,15 +39,16 @@ def mandelbrotmenge():
       #Maske aus Boolean Werte der neuen divergierten Pixels
       newDivergent = tf.not_equal(ind, lastMask)
 
-      #Zahl der Iteration reinschreiben
+      #Zahl der Iteration in 'color' reinschreiben
       color.assign(tf.where(newDivergent, i, color))
 
       #Maske aus Booleschen Werte der divergierten und konvergierten Pixels speichern
       lastMask.assign(ind)
-
+      
+#Setzen der Iterationsschritte auf '100'
 for i in range(100):
     mandelbrotmenge()
 
-
+#Visualisierung der Mandelbrot-menge
 plt.imshow(tf.abs(color))
 plt.show()
