@@ -16,31 +16,31 @@ lastMask = tf.Variable(tf.zeros_like(tf.cast(C, "bool")))
 
 def mandelbrotmenge():
 
-      #Maske aus Booleschen Werte der Divergierte und Convergierten Pixels berechnen
+      #Berechnug der Maske aus Booleschen Werte von allen divergierten und konvergierten Pixel
       ind = tf.abs(Z) < 2
 
-      #Convergierte Maske
+      #Erstellung der Maske allen konvergierten Pixel
       maskConvergent = tf.where(ind)
 
-      #selectieren der convergierten 'z' Pixels der Iteration
+      #Selectieren der konvergierten 'z' Pixels der Iteration
       zConvergent = tf.gather_nd(Z, maskConvergent)
 
-      # selectieren der zugehörigen 'c' Pixels der Iteration
+      #Selectieren der zugehörigen 'c' Pixels der Iteration
       cConvergent = tf.gather_nd(C, maskConvergent)
 
       #Berechnung der Mandelbrot-Menge
       Zn = zConvergent**2 + cConvergent
 
-      #Pixels aktualisieren und kopieren der neuen Maske in 'z'
+      #Kopieren der neuen Maske 'Zn' in 'Z' und Aktualisierung der Tensor 'Z'
       Z.assign(tf.tensor_scatter_nd_update(Z, maskConvergent, Zn))
 
-      #Maske aus Boolean Werte der neu divergierten Pixels
+      #Maske aus Boolean Werte der neuen divergierten Pixels
       newDivergent = tf.not_equal(ind, lastMask)
 
       #Zahl der Iteration reinschreiben
       color.assign(tf.where(newDivergent, i, color))
 
-      #Maske aus Booleschen Werte der Divergierte und Convergierten Pixels speichern
+      #Maske aus Booleschen Werte der divergierten und konvergierten Pixels speichern
       lastMask.assign(ind)
 
 for i in range(100):
