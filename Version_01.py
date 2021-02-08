@@ -41,5 +41,5 @@ def mandelbrotmenge():
     return color
 
 #Visualisierung der Mandelbrot-menge
-plt.imshow(tf.abs(mandelbrotmenge()))
+plt.imshow(tf.abs(mandelbrotmenge()), cmap='hot')
 plt.show()
