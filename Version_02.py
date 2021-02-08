@@ -50,5 +50,5 @@ for i in range(100):
     mandelbrotmenge()
 
 #Visualisierung der Mandelbrot-menge
-plt.imshow(tf.abs(color))
+plt.imshow(tf.abs(color), cmap='hot')
 plt.show()
